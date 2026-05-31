@@ -3,7 +3,27 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class TheLastOfferingEditorTarget : TargetRules
+public class 
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	TheLastOfferingEditorTarget : TargetRules
 {
 	public TheLastOfferingEditorTarget(TargetInfo Target) : base(Target)
 	{
