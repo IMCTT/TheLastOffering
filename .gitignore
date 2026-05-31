@@ -4,6 +4,8 @@ Build/
 DerivedDataCache/
 Intermediate/
 Saved/
+Content/__ExternalActors__/
+Content/__ExternalObjects__/
 *.VC.db
 *.opendb
 *.sdf
@@ -13,6 +15,7 @@ Saved/
 
 # Visual Studio
 .vs/
+.idea/
 *.user
 
 # Compilados
