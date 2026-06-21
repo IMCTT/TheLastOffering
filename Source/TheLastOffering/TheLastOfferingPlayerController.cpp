@@ -14,6 +14,7 @@
 #include "Engine/LocalPlayer.h"
 #include "TheLastOffering.h"
 
+
 ATheLastOfferingPlayerController::ATheLastOfferingPlayerController()
 {
 	bIsTouch = false;

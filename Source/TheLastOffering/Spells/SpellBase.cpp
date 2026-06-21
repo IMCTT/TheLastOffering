@@ -7,5 +7,5 @@ ASpellBase::ASpellBase()
 
 void ASpellBase::Launch(const FVector& Direction)
 {
-	// Subclases implementan la lógica específica
+	
 }

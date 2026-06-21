@@ -46,3 +46,9 @@ bool UStatsComponent::IsDead() const
 {
 	return CurrentHealth <= 0.f;
 }
+
+void UStatsComponent::SetMaxHealthMultiplier(float Multiplier)
+{
+	MaxHealth *= Multiplier;
+	CurrentHealth = MaxHealth;
+}

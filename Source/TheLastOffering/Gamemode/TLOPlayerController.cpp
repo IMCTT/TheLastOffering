@@ -5,6 +5,9 @@
 #include "Spells/SpellComponent.h"
 #include "../Characters/Onyx/Onyx.h"
 
+
+
+
 ATLOPlayerController::ATLOPlayerController()
 {
     bShowMouseCursor = true;
@@ -22,14 +25,31 @@ void ATLOPlayerController::BeginPlay()
     {
         if (IMC_Onyx)
             Subsystem->AddMappingContext(IMC_Onyx, 0);
-        else
-            UE_LOG(LogTemp, Error, TEXT("ATLOPlayerController: IMC_Onyx no asignado"));
     }
 
     FInputModeGameAndUI InputMode;
     InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
     InputMode.SetHideCursorDuringCapture(false);
+    
+    InputMode.SetWidgetToFocus(nullptr);
     SetInputMode(InputMode);
+    
+    
+    bShowMouseCursor = true;
+    
+    if (HUDWidgetClass)
+    {
+        HUDWidget = CreateWidget<UTLOHUDWidget>(this, HUDWidgetClass);
+        if (HUDWidget)
+        {
+            HUDWidget->AddToViewport();
+            HUDWidget->UpdateHealth(100.f, 100.f);
+            HUDWidget->UpdateWave(1);
+            HUDWidget->UpdateEnemiesRemaining(0);
+            HUDWidget->UpdateActiveSpell("FireSpell");
+            UE_LOG(LogTemp, Warning, TEXT("HUD creado desde PlayerController"));
+        }
+    }
 }
 
 void ATLOPlayerController::OnPossess(APawn* InPawn)
@@ -92,4 +112,10 @@ void ATLOPlayerController::HandlePreviousSpell()
 {
     if (!OnyxPawn || !OnyxPawn->SpellComponent) return;
     OnyxPawn->SpellComponent->PreviousSpell();
+}
+
+void ATLOPlayerController::UpdateHUDHealth(float CurrentHealth, float MaxHealth)
+{
+    if (HUDWidget)
+        HUDWidget->UpdateHealth(CurrentHealth, MaxHealth);
 }

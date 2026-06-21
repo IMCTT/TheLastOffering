@@ -36,6 +36,9 @@ public:
 	FTimerHandle AttackCooldownTimer;
 
 	void ResetAttackCooldown();
+	
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	float DamageMultiplier = 1.f;
 
 protected:
 	virtual void BeginPlay() override;

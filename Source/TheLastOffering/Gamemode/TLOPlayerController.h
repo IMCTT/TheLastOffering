@@ -2,7 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "TLOPlayerController.generated.h"
+#include "UI/TLOHUDWidget.h"
+#include "TLOPlayerController.generated.h"  
+
+void UpdateHUDHealth(float CurrentHealth, float MaxHealth);
 
 class UInputMappingContext;
 class UInputAction;
@@ -38,7 +41,16 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_PreviousSpell;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UTLOHUDWidget> HUDWidgetClass;
 
+	UPROPERTY(BlueprintReadOnly, Category = "UI")
+	TObjectPtr<UTLOHUDWidget> HUDWidget;
+	
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void UpdateHUDHealth(float CurrentHealth, float MaxHealth);
+	
 private:
 	void HandleMoveForward(const struct FInputActionValue& Value);
 	void HandleMoveRight(const struct FInputActionValue& Value);

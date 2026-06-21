@@ -2,7 +2,7 @@
 #include "Components/StatsComponent.h"
 #include "AI/TLOAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Components/CapsuleComponent.h"
+
 
 AEnemyBase::AEnemyBase()
 {
@@ -14,6 +14,8 @@ AEnemyBase::AEnemyBase()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
 
+	
+	//Le dice a unreal que el controller posee a este enemigo
 	AIControllerClass = ATLOAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -33,15 +35,12 @@ void AEnemyBase::OnTargetDetected(AActor* Target)
 
 void AEnemyBase::Attack()
 {
-	// Subclases implementan el ataque
+
 }
 
 void AEnemyBase::OnDeath()
 {
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetCharacterMovement()->DisableMovement();
-	SetLifeSpan(2.f);
-
 	UE_LOG(LogTemp, Warning, TEXT("[EnemyBase] %s murio"), *GetName());
 }
 

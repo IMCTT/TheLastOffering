@@ -14,6 +14,7 @@ void AEnemyRanged::Attack()
 	if (!bCanAttack || !CurrentTarget || !ProjectileClass) return;
 
 	float Distance = FVector::Dist(GetActorLocation(), CurrentTarget->GetActorLocation());
+	
 	if (Distance > AttackRange) return;
 
 	FVector Direction = (CurrentTarget->GetActorLocation() - GetActorLocation()).GetSafeNormal();
@@ -23,25 +24,17 @@ void AEnemyRanged::Attack()
 	SpawnParams.Owner = this;
 	SpawnParams.Instigator = this;
 
-	ASpellBase* Projectile = GetWorld()->SpawnActor<ASpellBase>(
-		ProjectileClass,
-		GetActorLocation(),
-		Direction.Rotation(),
+	ASpellBase* Projectile = GetWorld()->SpawnActor<ASpellBase>(ProjectileClass,GetActorLocation(),Direction.Rotation(),
 		SpawnParams
 	);
 
 	if (Projectile)
 	{
-		Projectile->Damage = ProjectileDamage;
+		Projectile->Damage = ProjectileDamage * DamageMultiplier;
 		Projectile->Launch(Direction);
 	}
 
 	bCanAttack = false;
-	GetWorld()->GetTimerManager().SetTimer(
-		AttackCooldownTimer,
-		this,
-		&AEnemyBase::ResetAttackCooldown,
-		AttackCooldown,
-		false
-	);
+	GetWorld()->GetTimerManager().SetTimer(AttackCooldownTimer,this,&AEnemyBase::ResetAttackCooldown,
+		AttackCooldown,false);
 }

@@ -29,6 +29,4 @@ private:
 	float TimeSinceLastUpdate = 0.f;
 
 	void UpdateChase(float DeltaTime);
-	
-	
 };

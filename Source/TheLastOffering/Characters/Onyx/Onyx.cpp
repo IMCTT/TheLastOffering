@@ -2,8 +2,10 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "../../Components/StatsComponent.h"
-#include "../../Spells/SpellComponent.h"
+#include "Components/StatsComponent.h"
+#include "Spells/SpellComponent.h"
+#include "GameMode/TLOPlayerController.h"
+
 
 AOnyx::AOnyx()
 {
@@ -34,10 +36,42 @@ AOnyx::AOnyx()
     bUseControllerRotationYaw = false;
 }
 
+#include "UI/TLOHUDWidget.h"
+#include "Blueprint/UserWidget.h"
+
+
 void AOnyx::BeginPlay()
 {
     Super::BeginPlay();
     StatsComponent->OnDeath.AddDynamic(this, &AOnyx::OnDeath);
+    StatsComponent->OnHealthChanged.AddDynamic(this, &AOnyx::OnHealthChanged);
+
+    // sin esto no anda el hud
+    FTimerHandle HUDTimer;
+    GetWorld()->GetTimerManager().SetTimer(HUDTimer,this,&AOnyx::CreateHUD,0.1f,false);
+}
+
+void AOnyx::CreateHUD()
+{
+    APlayerController* PC = Cast<APlayerController>(GetController());
+    
+    UE_LOG(LogTemp, Warning, TEXT("CreateHUD llamado. PC: %s | HUDWidgetClass: %s"),
+        PC ? TEXT("SI") : TEXT("NO"),
+        HUDWidgetClass ? TEXT("SI") : TEXT("NO"));
+
+    if (PC && HUDWidgetClass)
+    {
+        HUDWidget = CreateWidget<UTLOHUDWidget>(PC, HUDWidgetClass);
+        if (HUDWidget)
+        {
+            HUDWidget->AddToViewport();
+            UE_LOG(LogTemp, Warning, TEXT("HUD agregado al viewport"));
+            HUDWidget->UpdateHealth(StatsComponent->GetCurrentHealth(), StatsComponent->GetMaxHealth());
+            HUDWidget->UpdateWave(1);
+            HUDWidget->UpdateEnemiesRemaining(0);
+            HUDWidget->UpdateActiveSpell("FireSpell");
+        }
+    }
 }
 
 void AOnyx::Tick(float DeltaTime)
@@ -93,9 +127,14 @@ void AOnyx::RotateTowardsMouse()
             SetActorRotation(Direction.Rotation());
     }
 }
+void AOnyx::OnHealthChanged(float CurrentHealth, float MaxHealth)
+{
+    if (HUDWidget)
+        HUDWidget->UpdateHealth(CurrentHealth, MaxHealth);
+}
 
 void AOnyx::OnDeath()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Onyx ha muerto"));
-    // Aquí irá la lógica de game over
+    UE_LOG(LogTemp, Warning, TEXT("Onyx Murio"));
+   
 }

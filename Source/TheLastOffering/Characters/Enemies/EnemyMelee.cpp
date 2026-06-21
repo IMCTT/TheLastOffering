@@ -16,16 +16,12 @@ void AEnemyMelee::Attack()
 	float Distance = FVector::Dist(GetActorLocation(), CurrentTarget->GetActorLocation());
 	if (Distance > AttackRange) return;
 
+	//modificar por Idamageable
 	UStatsComponent* TargetStats = CurrentTarget->FindComponentByClass<UStatsComponent>();
 	if (TargetStats)
-		TargetStats->ApplyDamage(MeleeDamage, this);
+	TargetStats->ApplyDamage(MeleeDamage * DamageMultiplier, this);
 
 	bCanAttack = false;
-	GetWorld()->GetTimerManager().SetTimer(
-		AttackCooldownTimer,
-		this,
-		&AEnemyBase::ResetAttackCooldown,
-		AttackCooldown,
-		false
-	);
+	GetWorld()->GetTimerManager().SetTimer(AttackCooldownTimer,this,&AEnemyBase::ResetAttackCooldown,
+		AttackCooldown,false);
 }

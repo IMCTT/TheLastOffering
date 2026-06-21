@@ -38,6 +38,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Stats")
 	FOnDeath OnDeath;
+	
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	void SetMaxHealthMultiplier(float Multiplier);
 
 protected:
 	virtual void BeginPlay() override;

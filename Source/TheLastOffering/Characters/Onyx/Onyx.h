@@ -8,6 +8,9 @@ class USpringArmComponent;
 class UCameraComponent;
 class UStatsComponent;
 class USpellComponent;
+class UTLOHUDWidget;
+
+
 
 UCLASS()
 class THELASTOFFERING_API AOnyx : public ACharacter
@@ -30,6 +33,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USceneComponent> SpellSpawnPoint;
 
+	
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UTLOHUDWidget> HUDWidgetClass;
+
+	UPROPERTY(BlueprintReadOnly, Category = "UI")
+	TObjectPtr<UTLOHUDWidget> HUDWidget;
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -46,7 +56,13 @@ protected:
 
 private:
 	void RotateTowardsMouse();
+	
+	UFUNCTION()
+	void CreateHUD();
 
 	UFUNCTION()
 	void OnDeath();
+
+	UFUNCTION()
+	void OnHealthChanged(float CurrentHealth, float MaxHealth);
 };

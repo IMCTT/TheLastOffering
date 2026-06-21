@@ -12,26 +12,15 @@ void ATLOAIController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	ControlledEnemy = Cast<AEnemyBase>(InPawn);
-
-	// Intentamos cachear el player con un pequeño delay
-	GetWorld()->GetTimerManager().SetTimer(
-		FindPlayerTimer,
-		this,
-		&ATLOAIController::FindPlayer,
-		0.5f,
-		false
-	);
-
-	UE_LOG(LogTemp, Warning, TEXT("AIController: OnPossess ejecutado. Enemy valido: %s"),
-		ControlledEnemy ? TEXT("SI") : TEXT("NO"));
+	GetWorld()->GetTimerManager().SetTimer(	FindPlayerTimer,this,&ATLOAIController::FindPlayer,0.5f,
+		false);
+	
 }
 
 void ATLOAIController::FindPlayer()
 {
 	PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-
-	UE_LOG(LogTemp, Warning, TEXT("AIController: FindPlayer. Player valido: %s"),
-		PlayerPawn ? TEXT("SI") : TEXT("NO"));
+	
 }
 
 void ATLOAIController::Tick(float DeltaTime)
@@ -45,16 +34,15 @@ void ATLOAIController::UpdateChase(float DeltaTime)
 	if (!ControlledEnemy || !PlayerPawn) return;
 
 	TimeSinceLastUpdate += DeltaTime;
-	if (TimeSinceLastUpdate < UpdateRate) return;
+	
+	if (TimeSinceLastUpdate < UpdateRate) return; //resetea el tiempo asi no busca constantemente
+	
 	TimeSinceLastUpdate = 0.f;
 
-	float Distance = FVector::Dist(
-		ControlledEnemy->GetActorLocation(),
-		PlayerPawn->GetActorLocation()
-	);
+	// saca la distancia entre pawn y enemigo
+	float Distance = FVector::Dist(ControlledEnemy->GetActorLocation(),PlayerPawn->GetActorLocation());
 
-	UE_LOG(LogTemp, Warning, TEXT("AIController: Distancia: %.1f | DetectionRange: %.1f"),
-		Distance, ControlledEnemy->DetectionRange);
+	
 
 	if (Distance > ControlledEnemy->DetectionRange) return;
 
@@ -67,5 +55,5 @@ void ATLOAIController::UpdateChase(float DeltaTime)
 		return;
 	}
 
-	MoveToActor(PlayerPawn, ControlledEnemy->AttackRange * 0.9f);
+	MoveToActor(PlayerPawn, ControlledEnemy->AttackRange * 0.9f); // se frena antes asi no se bugea
 }
